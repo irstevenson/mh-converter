@@ -4,10 +4,31 @@ import vk7is.mhconvert.MaidenheadConverter as MC
 
 class ConverterSpec extends Specification {
 	@spock.lang.Unroll
-	void "test basic conversion from grid references - #testGrid"() {
-		expect:
-			MC.convertFrom( testGrid )[0] == expectedLoc[0]
-			MC.convertFrom( testGrid )[1] == expectedLoc[1]
+	void "test calculation of grid reference corners - #testGrid"() {
+		given: 'the results from attempting a conversion'
+			def results = MC.calculateGridCorner( testGrid )
+
+		expect: 'the results are correct and accurate'
+			results[0] == expectedLoc[0]
+			results[1] == expectedLoc[1]
+
+		where:
+			testGrid | expectedLoc
+			'AA'     | [-180.0,-90.0]
+			'JJ'     | [   0.0,  0.0]
+			'RR'     | [ 160.0, 80.0]
+			'JJ55'   | [  10.0,  5.0]
+			'JJ55ll' | [  10.9166666663,  5.4583333337]
+	}
+
+	@spock.lang.Unroll
+	void "test conversion from grid references - #testGrid"() {
+		given: 'the results from attempting a conversion'
+			def results = MC.convertFrom( testGrid )
+
+		expect: 'the results are correct and accurate'
+			results[0] == expectedLoc[0]
+			results[1] == expectedLoc[1]
 
 		where:
 			testGrid | expectedLoc

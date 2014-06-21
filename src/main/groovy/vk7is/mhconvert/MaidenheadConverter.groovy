@@ -1,5 +1,7 @@
 package vk7is.mhconvert
 
+import groovy.transform.Memoized
+
 class MaidenheadConverter {
 	private static BigDecimal DEG_25 = 2.5 / 60 // 2.5 degrees
 	private static BigDecimal DEG_50 = 5.0 / 60 // 5 degrees
@@ -12,6 +14,7 @@ class MaidenheadConverter {
 	*
 	* @return an array of two elements, the first being the longitude, the second being the latitude
 	*/
+	@Memoized
 	static ArrayList<BigDecimal> convertFrom( String gridRef ) {
 		if( gridRef.length() % 2 != 0 ) 
 			throw new IllegalArgumentException( 'gridRef must be an even number of characters' )
@@ -55,6 +58,7 @@ class MaidenheadConverter {
 	*
 	* @return an array of two elements, the first being the longitude, the second being the latitude
 	*/
+	@Memoized
 	static ArrayList<BigDecimal> calculateGridCorner( String gridRef ) {
 		// TODO: Add sanity check on gridRef - should this be done as a common method somehow?
 		def gridRefChars = gridRef.toUpperCase().collect { (char)it }
@@ -85,6 +89,7 @@ class MaidenheadConverter {
 	*         from each one to the next (including from the last back to the first) will result in a
 	*         square represening the gridRef square.
 	*/
+	@Memoized
 	static ArrayList< ArrayList<BigDecimal> > calculateGridPolygon( String gridRef ) {
 		// TODO: Add sanity check on gridRef - should this be done as a common method somehow?
 		ArrayList<BigDecimal> p1, p2, p3, p4
