@@ -42,6 +42,20 @@ class ConverterSpec extends Specification {
 			'JJ00aa' | [   0.04166666665,  0.02083333335] // as close to zero as we can get with 6 chars
 			'RR99xx' | [ 179.95833333255, 89.97916666745]
 	}
+	
+	void "test calculation of grid reference's polygon"() {
+		given: 'the results from attempting a calculation'
+			def results = MC.calculateGridPolygon( testGrid )
+
+		expect: 'the polygon is correct'
+			results == expectedPolygon
+
+		where:
+			testGrid | expectedPolygon
+			'AA'     | [[-180,-90], [-180,-80], [-160,-80], [-160,-90]]
+			'BB11'   | [[-158,-79], [-158,-78], [-156,-78], [-156,-79]]
+			'KL56vw' | [[31.7499999993,26.9166666674], [31.7499999993,26.9583333341], [31.8333333326,26.9583333341], [31.8333333326,26.9166666674]]
+	}
 
 	void 'test invalid parameters are correctly handled by convertFrom'() {
 		when: 'A call with an invalid grid ref'
