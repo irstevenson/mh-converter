@@ -46,8 +46,34 @@ class MaidenheadConverter {
 		[lon,lat]
 	}
 
-	static String convertTo( BigDecimal lat, BigDecimal lon ) {
-		// convert to a grid grid reference
+	/**
+	* Convert from a longitude and latitude to a grid reference of the specified number of
+	* characters.
+	*
+	* @params lon 
+	* @params lat 
+	* @params numChars Even value specifying the numbers of characters (level of resolution) of the
+	*                  returned grid reference.
+	*/
+	@Memoized
+	static String convertTo( BigDecimal lon, BigDecimal lat, Integer numChars ) {
+		// TODO: Add sanity check on inputs
+		BigDecimal workingLon = new BigDecimal(180 + lon).min(359.999999999) // need to cap the other extreme edge
+		BigDecimal workingLat = new BigDecimal(90 + lat).min(179.999999999)
+
+		String gridRef = (char)(((char)'A') + (workingLon/20))
+		gridRef += (char)(((char)'A') + (workingLat/10))
+		if( numChars > 2 ) {
+			gridRef += (char)(((char)'0') + (workingLon.remainder( 20 ) / 2))
+			gridRef += (char)(((char)'0') + (workingLat.remainder( 10 ) / 1))
+
+			if( numChars > 4 ) {
+				gridRef += (char)(((char)'a') + (workingLon.remainder( 20 ).remainder( 2 ) / DEG_50))
+				gridRef += (char)(((char)'a') + (workingLat.remainder( 10 ).remainder( 1 ) / DEG_25))
+			}
+		}
+
+		gridRef
 	}
 
 	/**

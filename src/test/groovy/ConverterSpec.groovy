@@ -43,7 +43,8 @@ class ConverterSpec extends Specification {
 			'RR99xx' | [ 179.95833333255, 89.97916666745]
 	}
 	
-	void "test calculation of grid reference's polygon"() {
+	@spock.lang.Unroll
+	void "test calculation of grid reference's polygon - #testGrid"() {
 		given: 'the results from attempting a calculation'
 			def results = MC.calculateGridPolygon( testGrid )
 
@@ -55,6 +56,30 @@ class ConverterSpec extends Specification {
 			'AA'     | [[-180,-90], [-180,-80], [-160,-80], [-160,-90]]
 			'BB11'   | [[-158,-79], [-158,-78], [-156,-78], [-156,-79]]
 			'KL56vw' | [[31.7499999993,26.9166666674], [31.7499999993,26.9583333341], [31.8333333326,26.9583333341], [31.8333333326,26.9166666674]]
+	}
+
+	@spock.lang.Unroll
+	void 'test conversion from longitude and latitude to grid reference - #testLon, #testLat == #expectedGrid'() {
+		given: 'the results from attempting a calculation'
+			String result = MC.convertTo( testLon, testLat, requestedChars )
+
+		expect: 'the calculated grid is correct'
+			result == expectedGrid
+
+		where:
+			testLon | testLat | requestedChars | expectedGrid
+			0       | 0       | 2              | 'JJ'
+			0       | 0       | 4              | 'JJ00'
+			0       | 0       | 6              | 'JJ00aa'
+			180     | 90      | 2              | 'RR'
+			180     | 90      | 4              | 'RR99'
+			180     | 90      | 6              | 'RR99xx'
+			-180    | -90     | 2              | 'AA'
+			-180    | -90     | 4              | 'AA00'
+			-180    | -90     | 6              | 'AA00aa'
+			10      | 5       | 4              | 'JJ55'
+			10      | 5       | 4              | 'JJ55'
+			10.958  | 5.479   | 6              | 'JJ55ll'
 	}
 
 	void 'test invalid parameters are correctly handled by convertFrom'() {
