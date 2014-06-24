@@ -18,7 +18,6 @@ class MaidenheadConverter {
 	static ArrayList<BigDecimal> convertFrom( String gridRef ) {
 		if( gridRef.length() % 2 != 0 ) 
 			throw new IllegalArgumentException( 'gridRef must be an even number of characters' )
-
 		if( gridRef.length() < 2 || gridRef.length() > 6 )
 			throw new IllegalArgumentException( 'gridRef must be a length between two and six even characters' )
 
@@ -50,14 +49,22 @@ class MaidenheadConverter {
 	* Convert from a longitude and latitude to a grid reference of the specified number of
 	* characters.
 	*
-	* @params lon 
-	* @params lat 
+	* @params lon longitude
+	* @params lat latitude
 	* @params numChars Even value specifying the numbers of characters (level of resolution) of the
 	*                  returned grid reference.
 	*/
 	@Memoized
 	static String convertTo( BigDecimal lon, BigDecimal lat, Integer numChars ) {
-		// TODO: Add sanity check on inputs
+		if( lon < -180 || lon > 180 )
+			throw new IllegalArgumentException( 'longitude needs to be between -180 and 180' )
+		if( lat < -90 || lat > 90 )
+			throw new IllegalArgumentException( 'latitude needs to be between -90 and 90' )
+		if( numChars % 2 != 0 ) 
+			throw new IllegalArgumentException( 'numChars must be an even number' )
+		if( numChars < 2 || numChars > 6 )
+			throw new IllegalArgumentException( 'numChars must be between two and six even characters' )
+
 		BigDecimal workingLon = new BigDecimal(180 + lon).min(359.999999999) // need to cap the other extreme edge
 		BigDecimal workingLat = new BigDecimal(90 + lat).min(179.999999999)
 
@@ -86,7 +93,12 @@ class MaidenheadConverter {
 	*/
 	@Memoized
 	static ArrayList<BigDecimal> calculateGridCorner( String gridRef ) {
-		// TODO: Add sanity check on gridRef - should this be done as a common method somehow?
+		if( gridRef.length() % 2 != 0 ) 
+			throw new IllegalArgumentException( 'gridRef must be an even number of characters' )
+		if( gridRef.length() < 2 || gridRef.length() > 6 )
+			throw new IllegalArgumentException( 'gridRef must be a length between two and six even characters' )
+
+		// First, convert the String to an array of characters
 		def gridRefChars = gridRef.toUpperCase().collect { (char)it }
 
 		BigDecimal lon = (gridRefChars[0] - (char)'A') * 20 - 180
@@ -117,7 +129,11 @@ class MaidenheadConverter {
 	*/
 	@Memoized
 	static ArrayList< ArrayList<BigDecimal> > calculateGridPolygon( String gridRef ) {
-		// TODO: Add sanity check on gridRef - should this be done as a common method somehow?
+		if( gridRef.length() % 2 != 0 ) 
+			throw new IllegalArgumentException( 'gridRef must be an even number of characters' )
+		if( gridRef.length() < 2 || gridRef.length() > 6 )
+			throw new IllegalArgumentException( 'gridRef must be a length between two and six even characters' )
+
 		ArrayList<BigDecimal> p1, p2, p3, p4
 
 		p1 = calculateGridCorner( gridRef )

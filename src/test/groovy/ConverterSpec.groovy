@@ -90,6 +90,72 @@ class ConverterSpec extends Specification {
 			thrown IllegalArgumentException
 
 		where:
-			badGrid << ['', 'A', 'abc', 'ABC123ABC123']
+			badGrid << ['', 'A', 'abc', 'abc12', 'ABC123ABC123']
+	}
+
+	void 'test invalid longitudes are correctly handled by convertTo'() {
+		when: 'A call with an invalid longitude'
+			MC.convertTo( badLon, 0, 2 )
+
+		then:
+			thrown IllegalArgumentException
+
+		where:
+			badLon << [ -181, 181 ]
+	}
+
+	void 'test invalid latitudes are correctly handled by convertTo'() {
+		when: 'A call with an invalid latitude'
+			MC.convertTo( 0, badLat, 2 )
+
+		then:
+			thrown IllegalArgumentException
+
+		where:
+			badLat << [ -91, 91 ]
+	}
+
+	void 'test invalid numChars are correctly handled by convertTo'() {
+		when: 'A call with an invalid requested number of characters'
+			MC.convertTo( 0, 0, numChars )
+
+		then:
+			thrown IllegalArgumentException
+
+		where:
+			numChars << [ 1, 3, 5, 7 ]
+	}
+
+	void 'test valid numChars are correctly handled by convertTo'() {
+		when: 'A call valid number of requested characters'
+			MC.convertTo( 0, 0, numChars )
+
+		then:
+			notThrown IllegalArgumentException
+
+		where:
+			numChars << [ 2, 4, 6 ]
+	}
+
+	void 'test invalid parameters are correctly handled by calculateGridCorner'() {
+		when: 'A call with an invalid grid ref'
+			MC.calculateGridCorner( badGrid )
+
+		then:
+			thrown IllegalArgumentException
+
+		where:
+			badGrid << ['', 'A', 'abc', 'abc12', 'ABC123ABC123']
+	}
+
+	void 'test invalid parameters are correctly handled by calculateGridPolygon'() {
+		when: 'A call with an invalid grid ref'
+			MC.calculateGridPolygon( badGrid )
+
+		then:
+			thrown IllegalArgumentException
+
+		where:
+			badGrid << ['', 'A', 'abc', 'abc12', 'ABC123ABC123']
 	}
 }
