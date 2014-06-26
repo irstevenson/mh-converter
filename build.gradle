@@ -16,4 +16,19 @@ codenarc {
 	configFile = new File( 'config/codenarc/rules.groovy' )
 }
 
+jar {
+	// Add all the jars to the jar we're building
+	// - seeing by default the JAR standard has no support for embedded jars, we simple extract them
+	//   all and include the resulting files (hence the zipTree).
+	// - could replace with the oneJar plugin, but I like the simplicity of not needing to.
+	from {
+		configurations.runtime.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}
+	manifest {
+		attributes 'Main-Class': 'vk7is.mhconvert.CLI'
+	}
+}
+
 jar.dependsOn check, test
