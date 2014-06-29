@@ -2,7 +2,45 @@ package vk7is.mhconvert
 
 class CLI {
 	static void main( String[] args ) {
-		usage()
+		if( args.size() < 2 ) {
+			println 'Incorrect usage...'
+			usage()
+			System.exit( 1 )
+		}
+
+		try {
+			switch( args[0] ) {
+				case 'fromGrid':
+					// TODO: Check to ensure there is an args[1]
+					def coords = MaidenheadConverter.convertFrom( args[1] )
+					println "Grid Reference: ${args[1]}"
+					println "Longitude:      ${coords[0]}"
+					println "Latitude:       ${coords[1]}"
+
+					break
+
+				case 'toGrid':
+					// TODO: Check there is a args[1..3] or throw an IllegalArgumentException
+					def coords = [longitude: args[1].toBigDecimal(), latitude: args[2].toBigDecimal()]
+					def numChars = args[3].toInteger()
+					def gridRef = MaidenheadConverter.convertTo( coords.longitude, coords.latitude, numChars )
+					println "${numChars} character grid reference for:"
+					println "Longitude : ${coords.longitude}"
+					println "Latitude  : ${coords.latitude}"
+					println 'Grid Reference:'
+					println "  ${gridRef}"
+
+					break
+
+				default:
+					throw new IllegalArgumentException( 'Unrecognised command...' )
+			}
+		}
+		catch( IllegalArgumentException iae ) {
+			System.err.println "Unable to process command: ${iae.message}"
+			usage()
+			System.exit( 1 )
+		}
 	}
 
 	static usage() {
