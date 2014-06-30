@@ -11,7 +11,6 @@ class CLI {
 		try {
 			switch( args[0] ) {
 				case 'fromGrid':
-					// TODO: Check to ensure there is an args[1]
 					def coords = MaidenheadConverter.convertFrom( args[1] )
 					println "Grid Reference: ${args[1]}"
 					println "Longitude:      ${coords[0]}"
@@ -20,7 +19,9 @@ class CLI {
 					break
 
 				case 'toGrid':
-					// TODO: Check there is a args[1..3] or throw an IllegalArgumentException
+					if( args.size() != 4 )
+						throw new IllegalArgumentException( 'toGrid requires 3 parameters' )
+
 					def coords = [longitude: args[1].toBigDecimal(), latitude: args[2].toBigDecimal()]
 					def numChars = args[3].toInteger()
 					def gridRef = MaidenheadConverter.convertTo( coords.longitude, coords.latitude, numChars )
