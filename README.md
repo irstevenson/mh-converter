@@ -17,6 +17,13 @@ $ gradle jar
 
 This will place the resultant JAR in `build/libs`.
 
+## Documentation
+If you'd like to build the documentation:
+```
+$ gradle groovydoc
+```
+The results can then be found in `build/docs/groovydoc`.
+
 # Usage
 ## Command Line
 
@@ -31,5 +38,6 @@ That will in turn show you the usage information and be enough to get you going.
 
 There are three key places you can see how to use this as a library:
 * By generating and reading the GroovyDoc
+ * Details above on how to do this. Note: a bit of work is still required on the GroovyDoc, but there should be enough there to get you going - especially when combined with the below.
 * By reading the tests in `src/test/groovy/ConverterSpec.groovy`
 * By reading the command line interface source at `src/main/groovy/vk7is/mhconvert/CLI.groovy`
