@@ -2,6 +2,9 @@ package vk7is.mhconvert
 
 import groovy.transform.Memoized
 
+/**
+* A collection of methods for conversion to and from the Maidenhead Locator System (MLS).
+*/
 class MaidenheadConverter {
 	private static BigDecimal DEG_25 = 2.5 / 60 // 2.5 degrees
 	private static BigDecimal DEG_50 = 5.0 / 60 // 5 degrees
@@ -49,10 +52,12 @@ class MaidenheadConverter {
 	* Convert from a longitude and latitude to a grid reference of the specified number of
 	* characters.
 	*
-	* @params lon longitude
-	* @params lat latitude
-	* @params numChars Even value specifying the numbers of characters (level of resolution) of the
-	*                  returned grid reference.
+	* @param lon longitude
+	* @param lat latitude
+	* @param numChars Even value specifying the numbers of characters (level of resolution) of the
+	*        returned grid reference.
+	*
+	* @return a maidenhead grid reference of {@code numChars} precision
 	*/
 	@Memoized
 	static String convertTo( BigDecimal lon, BigDecimal lat, Integer numChars ) {
